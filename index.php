@@ -2,12 +2,11 @@
 require_once "include/rest.class.php";
 
 $Obj = new main();
- 
-$Obj->dbname = "marketious";
+$Obj->dbname = "DATABASE_NAME";
 $Obj->username = "root";
 $Obj->password = "";
 $Obj->connectMysql();
-$Obj->query = "SELECT * FROM admins";
+$Obj->query = "SELECT * FROM TABLE_NAME";
 $jsonD = $Obj->getData();
 print_r($jsonD);
 ?>

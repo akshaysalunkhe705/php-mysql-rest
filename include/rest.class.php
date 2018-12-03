@@ -40,7 +40,7 @@ class Restphpmysql
 		}
 		else
 		{
-			$json[] = ["error"=>"Somtheing is wrong"];
+			$json[] = ["error"=>"TABLE EMPTY..."];
 		    return json_encode($json);
 		}
 	}

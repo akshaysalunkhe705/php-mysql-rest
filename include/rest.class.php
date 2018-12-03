@@ -1,20 +1,25 @@
 <?php
 
-class Main
+class Restphpmysql
 {
 	protected $_conn;
-	public $host;
-	public $dbname;
-	public $username;
-	public $password;
-	public $query;
+	protected $host;
+	protected $dbname;
+	protected $username;
+	protected $password;
+	protected $query;
+
+	function __construct()
+	{
+		$this->connectMysql();
+		$method = $this->getUrl();
+		$this->{$method}();
+	}
 
 	public function connectMysql()
 	{
-		// Create connection
 		$this->_conn = new mysqli($this->host, $this->username, $this->password, $this->dbname);
 
-		// Check connection
 		if ($this->_conn->connect_error) {
 		    die("Connection failed: " . $this->_conn->connect_error);
 		}
@@ -38,6 +43,17 @@ class Main
 			$json[] = ["error"=>"Somtheing is wrong"];
 		    return json_encode($json);
 		}
+	}
+
+	public function getUrl()
+	{
+		$urls = explode('\\', getcwd());
+		$currentDir = $urls[count($urls)-1];
+
+		$param = explode('/', $_SERVER['REQUEST_URI']);
+		$currentParam = $param[count($param)-1];
+		
+		return $currentParam;
 	}
 }
 

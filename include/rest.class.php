@@ -11,8 +11,7 @@ class Restphpmysql
 	function __construct($childClassFunctions)
 	{
 		$this->connectMysql();
-		$functionName = $this->getRoute();
-		$this->runFunction($childClassFunctions,$functionName);
+		$functionName = $this->getRoute($childClassFunctions);
 	}
 
 	public function connectMysql()
@@ -54,26 +53,37 @@ class Restphpmysql
 		}
 	}
 
-	private function getRoute()
+	private function getRoute($childClassFunctions)
 	{
 		$urls = explode('\\', getcwd());
 		$currentDir = $urls[count($urls)-1];
+		$URLArray = explode('/', $_SERVER['REQUEST_URI']);
+		$currentDirIndex = array_search($currentDir,$URLArray);
+		$currentFunctionName = $URLArray[$currentDirIndex+1];
 
-		$param = explode('/', $_SERVER['REQUEST_URI']);
-		$functionName = $param[count($param)-1];
-		
-		return $functionName;
-	}
+		$params = array();
+		foreach ($URLArray as $key => $value)
+		{
+			if($key > $currentDirIndex+1)
+			{
+				$params[] = $value;
+			}
+		}
 
-	private function runFunction($childClassFunctions,$currentFunctionName)
-	{
 		if(in_array($currentFunctionName, $childClassFunctions))
 		{
-			$this->{$currentFunctionName}();			
-		}else{
+			$this->runFunction($currentFunctionName,$params);
+		}
+		else
+		{
 			$json = ["error"=>"This Route is Not Available..."];
 		    print_r(json_encode($json));
 		}
+	}
+
+	private function runFunction($currentFunctionName,$params)
+	{
+		$this->{$currentFunctionName}($params);
 	}
 
 }

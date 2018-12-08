@@ -5,7 +5,6 @@ class Myclass extends Restphpmysql
 {
 	function __construct()
 	{
-		$this->dbname = "marketious";
 		//$this->dbname = "DATABASE_NAME";
 		$this->username = "root";
 		$this->password = "";
@@ -15,12 +14,12 @@ class Myclass extends Restphpmysql
 
 	function getAdmins($val1,$val2)
 	{
-		$jsonD = $this->getJson("SELECT * FROM admins");
+		$jsonD = $this->getJson("SELECT * FROM TABLE_NAME");
 		print_r($jsonD);
 	}
 	function getUsers()
 	{
-		$jsonD = $this->getJson("SELECT * FROM admins");
+		$jsonD = $this->getJson("SELECT * FROM TABLE_NAME");
 		print_r($jsonD);
 	}
 }

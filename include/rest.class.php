@@ -7,13 +7,12 @@ class Restphpmysql
 	protected $dbname;
 	protected $username;
 	protected $password;
-	protected $query;
 
-	function __construct()
+	function __construct($childClassFunctions)
 	{
 		$this->connectMysql();
-		$method = $this->getUrl();
-		$this->{$method}();
+		$functionName = $this->getRoute();
+		$this->runFunction($childClassFunctions,$functionName);
 	}
 
 	public function connectMysql()
@@ -25,36 +24,58 @@ class Restphpmysql
 		}
 	}
 
-	public function getData()
+	public function getJson($query)
 	{
-		$abcd = array();
-		$json = array();
-		$result = $this->_conn->query($this->query);
-		if ($result->num_rows > 0)
+		try
 		{
-		    while($row = $result->fetch_assoc())
-		    {
-		    	$json[] = $row;
-		    }
-		    return json_encode($json);
-		}
-		else
-		{
-			$json[] = ["error"=>"TABLE EMPTY..."];
-		    return json_encode($json);
+			$abcd = array();
+			$json = array();
+			
+			$query = preg_replace('/\\\\/', '', $query);
+			$query = preg_replace('--', '', $query);
+			$query = stripslashes($query);
+
+			$result = $this->_conn->query($query);
+			if ($result->num_rows > 0)
+			{
+			    while($row = $result->fetch_assoc())
+			    {
+			    	$json[] = $row;
+			    }
+			    return json_encode($json);
+			}
+			else
+			{
+				$json = ["error"=>"TABLE EMPTY..."];
+			    return json_encode($json);
+			}
+		}catch(Exception $e){
+			throw new Exception("Something is wrong", 1);
 		}
 	}
 
-	public function getUrl()
+	private function getRoute()
 	{
 		$urls = explode('\\', getcwd());
 		$currentDir = $urls[count($urls)-1];
 
 		$param = explode('/', $_SERVER['REQUEST_URI']);
-		$currentParam = $param[count($param)-1];
+		$functionName = $param[count($param)-1];
 		
-		return $currentParam;
+		return $functionName;
 	}
+
+	private function runFunction($childClassFunctions,$currentFunctionName)
+	{
+		if(in_array($currentFunctionName, $childClassFunctions))
+		{
+			$this->{$currentFunctionName}();			
+		}else{
+			$json = ["error"=>"This Route is Not Available..."];
+		    print_r(json_encode($json));
+		}
+	}
+
 }
 
 ?>

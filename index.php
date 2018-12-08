@@ -5,25 +5,23 @@ class Myclass extends Restphpmysql
 {
 	function __construct()
 	{
-		$this->dbname = "DATABASE_NAME";
+		$this->dbname = "marketious";
+		//$this->dbname = "DATABASE_NAME";
 		$this->username = "root";
 		$this->password = "";
 
-        parent::__construct();
-        $currentClass = get_class($this);
+        parent::__construct(get_class_methods($this));
 	}
 
-	function getAdmins()
+	function getAdmins($val1,$val2)
 	{
-		$this->query = "SELECT * FROM TABLE_NAME1";
-		$jsonD = $this->getData();
+		$jsonD = $this->getJson("SELECT * FROM admins");
 		print_r($jsonD);
 	}
 	function getUsers()
 	{
-		$this->query = "SELECT * FROM TABLE_NAME2";
-		$jsonD2 = $this->getData();
-		print_r($jsonD2);
+		$jsonD = $this->getJson("SELECT * FROM admins");
+		print_r($jsonD);
 	}
 }
 $Obj2 = new Myclass();

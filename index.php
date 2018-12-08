@@ -6,6 +6,7 @@ class Myclass extends Restphpmysql
 	function __construct()
 	{
 		$this->dbname = "DATABASE_NAME";
+		$this->host = "localhost";
 		$this->username = "root";
 		$this->password = "";
 

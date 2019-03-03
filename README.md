@@ -1,5 +1,5 @@
 <h1>Rest Api Mysql</h1>
-<p>It is use to make api easy and relable.</p>
+<p>It is use to make easy rest api.</p>
 
 <h3>Steps</h3>
 <ul>
